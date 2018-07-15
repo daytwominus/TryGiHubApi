@@ -1,0 +1,15 @@
+/src/.vs/TryGiHubApi/DesignTimeBuild
+/src/.vs/TryGitHubApi/v15
+/src/Common/bin/
+/src/Common/obj
+/src/DataRetriever/bin/
+/src/DataRetriever/obj
+/src/Declarations/bin/
+/src/Declarations/obj/Debug/netcoreapp2.0
+/src/Tests/GiHubGrapthQlDataRetrieverTests/bin/Debug/netcoreapp2.0
+/src/Tests/GiHubGrapthQlDataRetrieverTests/obj/Debug/netcoreapp2.0
+/src/Tests/GiHubGrapthQlDataRetrieverTests/obj
+/src/Declarations/obj
+/src/WebService/bin/Debug/netcoreapp2.0
+/src/WebService/obj/Debug/netcoreapp2.0
+/src/WebService/obj

@@ -1,0 +1,27 @@
+﻿using System;
+
+namespace Common
+{
+    public static class TokenProvider
+    {
+        private const string GitUserTokenEnvVariableName = "GIT_USER_TOKEN";
+        private static string _token;
+        public static string Token
+        {
+            get
+            {
+                if (!string.IsNullOrEmpty(_token))
+                    return _token;
+                _token = Environment.GetEnvironmentVariable(GitUserTokenEnvVariableName);
+
+                if(string.IsNullOrEmpty(_token))
+                    throw new ApplicationException($"Token not found in environment variables. " +
+                                                   $"Add {GitUserTokenEnvVariableName} environment variable in console:{Environment.NewLine}" +
+                                                   $"setx {GitUserTokenEnvVariableName} \"<token>\"");
+
+                return _token;
+            }
+            set { _token = value; }
+        }
+    }
+}
