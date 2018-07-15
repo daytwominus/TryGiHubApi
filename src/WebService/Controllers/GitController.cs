@@ -14,11 +14,15 @@ namespace WebService.Controllers
             _dataRetriever = dataRetriever;
         }
 
-        // GET api/values/5
         [HttpGet("{city}")]
         public string Get(string city)
         {
             return "value";
         }
-    }
+
+	    [HttpPut("{token}")]
+	    public void Put([FromBody]string value)
+	    {
+	    }
+	}
 }
