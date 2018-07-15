@@ -1,5 +1,4 @@
 ﻿using Common;
-using Declarations.Interfaces;
 using Declarations.Interfaces.Query;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -25,7 +24,7 @@ namespace WebService
             services.AddMvc();
             services.AddSingleton<IDataRetriever>(new GiHubGrapthQlDataRetriever.GiHubGrapthQlDataRetriever(
                 user: Configuration.GetSection("Git")["User"],
-                token: TokenProvider.Token));
+                tokenFunc:() => TokenProvider.Token));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

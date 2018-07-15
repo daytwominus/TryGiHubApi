@@ -1,4 +1,5 @@
 ﻿using System;
+using Declarations.Exceptions;
 
 namespace Common
 {
@@ -15,13 +16,17 @@ namespace Common
                 _token = Environment.GetEnvironmentVariable(GitUserTokenEnvVariableName);
 
                 if(string.IsNullOrEmpty(_token))
-                    throw new ApplicationException($"Token not found in environment variables. " +
+                    throw new NoTokenException($"Token not found in environment variables. " +
                                                    $"Add {GitUserTokenEnvVariableName} environment variable in console:{Environment.NewLine}" +
                                                    $"setx {GitUserTokenEnvVariableName} \"<token>\"");
 
                 return _token;
             }
-            set { _token = value; }
+	        set
+	        {
+		        Environment.SetEnvironmentVariable(GitUserTokenEnvVariableName, value);
+				_token = value; 
+	        }
         }
     }
 }

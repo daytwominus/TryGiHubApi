@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
 using Declarations.DomainModel;
@@ -14,17 +15,34 @@ namespace GiHubGrapthQlDataRetriever
     {
         private const string GitHubApiPath = "https://api.github.com/graphql";
         private GraphQLClient _graphQlClient;
+	    private string _user;
+	    private Func<string> _tokenFunc;
+		
+		public GiHubGrapthQlDataRetriever(string user, string token)
+		{
+			_user = user;
 
-        public GiHubGrapthQlDataRetriever(string user, string token)
-        {
-            _graphQlClient = new GraphQLClient(GitHubApiPath)
-            {
-                DefaultRequestHeaders = { Authorization = new AuthenticationHeaderValue("Bearer", token) }
-            };
-            _graphQlClient.DefaultRequestHeaders.Add("User-Agent", user);
-        }
+			CheckClient(token);
+		}
 
-        public async Task<GraphQLResponse> RunQuery(string query, IList<KeyValuePair<string, string>> variables)
+	    private void CheckClient(string token)
+	    {
+		    if (_graphQlClient == null)
+		    {
+			    _graphQlClient = new GraphQLClient(GitHubApiPath)
+			    {
+				    DefaultRequestHeaders = {Authorization = new AuthenticationHeaderValue("Bearer", token)}
+			    };
+			    _graphQlClient.DefaultRequestHeaders.Add("User-Agent", _user);
+		    }
+	    }
+
+		public GiHubGrapthQlDataRetriever(string user, Func<string> tokenFunc)
+		{
+			_user = user;
+		}
+
+		public async Task<GraphQLResponse> RunQuery(string query, IList<KeyValuePair<string, string>> variables)
         {
             var request = new GraphQLRequest
             {
@@ -32,8 +50,17 @@ namespace GiHubGrapthQlDataRetriever
                 Variables = variables
             };
 
-            var graphQLResponse = await _graphQlClient.PostAsync(request);
-	        return graphQLResponse;
+	        if (_graphQlClient == null)
+	        {
+		        _graphQlClient = new GraphQLClient(GitHubApiPath)
+		        {
+			        DefaultRequestHeaders = { Authorization = new AuthenticationHeaderValue("Bearer", _tokenFunc.Invoke()) }
+		        };
+		        _graphQlClient.DefaultRequestHeaders.Add("User-Agent", _user);
+			}
+
+            var graphQlResponse = await _graphQlClient.PostAsync(request);
+	        return graphQlResponse;
 
         }
 

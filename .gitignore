@@ -13,3 +13,7 @@
 /src/WebService/bin/Debug/netcoreapp2.0
 /src/WebService/obj/Debug/netcoreapp2.0
 /src/WebService/obj
+/src/.vs/TryGitHubApi/DesignTimeBuild
+/src/Tests/Util/obj/Debug/netcoreapp2.0
+/src/Tests/Util/bin/Debug/netcoreapp2.0
+/src/Tests/Util/obj
