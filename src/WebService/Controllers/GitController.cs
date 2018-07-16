@@ -20,21 +20,30 @@ namespace WebService.Controllers
             _dataRetriever = dataRetriever;
         }
 
-        [HttpGet("city/{city}")]
-        public List<GitRepository> GetByCity(string city)
+        [HttpGet("repos/{city}")]
+        public List<GitRepository> GetReposByCity(string city)
         {
             var repors = _dataRetriever.GetRepositoriesByCity(city).Result.ToList();
 
-            _logger.LogInformation($"Search by city {city}");
+            _logger.LogInformation($"Search repos by city {city}");
             return repors;
         }
 
-        [HttpGet("user/{user}")]
-        public List<GitRepository> GetByUser(string user)
+        [HttpGet("repos/{user}")]
+        public List<GitRepository> GetReposByUser(string user)
         {
             var repors = _dataRetriever.GetRepositoryByUser(user).Result.ToList();
 
-            _logger.LogInformation($"Search by user {user}");
+            _logger.LogInformation($"Search repos by user {user}");
+            return repors;
+        }
+
+        [HttpGet("users/{user}")]
+        public GitUser GetUserByLogin(string user)
+        {
+            var repors = _dataRetriever.GetUserByName(user).Result;
+
+            _logger.LogInformation($"Search users by user {user}");
             return repors;
         }
 

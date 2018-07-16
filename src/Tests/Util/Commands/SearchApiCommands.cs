@@ -20,8 +20,6 @@ namespace Util.Commands
         {
             try
             {
-                //var token = TokenProvider.Token;
-
                 var h = new RestHelper(_configuration["serviceEndpoint"]);
                 h.Get($"git/city/{q}");
             }
@@ -35,8 +33,6 @@ namespace Util.Commands
         public bool Token(string token)
         {
             Console.WriteLine("Updating token");
-
-            //todo: send token to service
             
             var h = new RestHelper($"{_configuration["serviceEndpoint"]}/git/token");
             h.Post(token);

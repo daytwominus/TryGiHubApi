@@ -2,9 +2,9 @@
 
 namespace GiHubGrapthQlDataRetriever.Queries
 {
-    public class SearchByCityInDescriptionQuery : BaseQuery
+    public class SearchReposByCityInDescriptionQuery : BaseQuery
 	{
-		public SearchByCityInDescriptionQuery(string location)
+		public SearchReposByCityInDescriptionQuery(string location)
 		{
 			Variables.Add(new KeyValuePair<string, string>(nameof(location), location));
 		}

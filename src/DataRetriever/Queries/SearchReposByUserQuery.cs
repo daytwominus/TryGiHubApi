@@ -4,9 +4,9 @@ using System.Text;
 
 namespace GiHubGrapthQlDataRetriever.Queries
 {
-    public class SearchByUserQuery : BaseQuery
+    public class SearchReposByUserQuery : BaseQuery
     {
-        public SearchByUserQuery(string user)
+        public SearchReposByUserQuery(string user)
         {
             Variables.Add(new KeyValuePair<string, string>(nameof(user), user));
         }

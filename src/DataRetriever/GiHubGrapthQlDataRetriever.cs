@@ -68,7 +68,7 @@ namespace GiHubGrapthQlDataRetriever
         public async Task<IList<GitRepository>> GetRepositoriesByCity(string city)
         {
 	        var ret = new List<GitRepository>();
-	        var q = new SearchByCityInDescriptionQuery(city);
+	        var q = new SearchReposByCityInDescriptionQuery(city);
 	        var graphQlResponse = await RunQuery(q.Query, null);
 
 	        for (var i = 0; i < graphQlResponse.Data["search"]["edges"].Count; i++)
@@ -82,12 +82,27 @@ namespace GiHubGrapthQlDataRetriever
         public async Task<IList<GitRepository>> GetRepositoryByUser(string user)
         {
             var ret = new List<GitRepository>();
-            var q = new SearchByUserQuery(user);
+            var q = new SearchReposByUserQuery(user);
             var graphQlResponse = await RunQuery(q.Query, null);
 
             for (var i = 0; i < graphQlResponse.Data["search"]["edges"].Count; i++)
             {
                 ret.Add(graphQlResponse.Data["search"]["edges"][i]["node"].ToObject<GitRepository>());
+            }
+
+            return ret;
+        }
+
+        public async Task<GitUser> GetUserByName(string user)
+        {
+            var ret = new GitUser();
+            var q = new SearchUserByLoginQuery(user);
+            var graphQlResponse = await RunQuery(q.Query, null);
+
+            for (var i = 0; i < graphQlResponse.Data["search"]["edges"].Count; i++)
+            {
+                ret = graphQlResponse.Data["search"]["edges"][i].ToObject<GitUser>();
+                return ret;
             }
 
             return ret;
