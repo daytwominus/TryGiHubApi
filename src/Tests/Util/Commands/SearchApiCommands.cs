@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Net;
-using System.Net.NetworkInformation;
-using System.Text;
 using Common;
 using Declarations.Exceptions;
 using Microsoft.Extensions.Configuration;
@@ -20,14 +16,14 @@ namespace Util.Commands
 	            .Build();
         }
 
-        public bool Search(string by)
+        public bool Search(string by, string q)
         {
             try
             {
                 //var token = TokenProvider.Token;
 
-                var h = new RestHelper("http://localhost:5000/api/values");
-                h.CallApi();
+                var h = new RestHelper(_configuration["serviceEndpoint"]);
+                h.Get($"git/city/{q}");
             }
             catch (NoTokenException e)
             {
@@ -41,6 +37,9 @@ namespace Util.Commands
             Console.WriteLine("Updating token");
 
             //todo: send token to service
+            
+            var h = new RestHelper($"{_configuration["serviceEndpoint"]}/git/token");
+            h.Post(token);
             TokenProvider.Token = token;
             return true;
         }

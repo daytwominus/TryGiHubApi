@@ -2,7 +2,7 @@
   "profiles": {
     "Util": {
       "commandName": "Project",
-      "commandLineArgs": "Search df"
+      "commandLineArgs": "search city abc"
     }
   }
 }

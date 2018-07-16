@@ -24,7 +24,6 @@ namespace Common
             }
 	        set
 	        {
-		        Environment.SetEnvironmentVariable(GitUserTokenEnvVariableName, value);
 				_token = value; 
 	        }
         }
