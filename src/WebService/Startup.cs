@@ -35,8 +35,6 @@ namespace WebService
             {
                 app.UseDeveloperExceptionPage();
             }
-            
-            loggerFactory.AddLog4Net();
 
             app.UseMiddleware(typeof(ErrorHandlingMiddleware));
             app.UseMvc();

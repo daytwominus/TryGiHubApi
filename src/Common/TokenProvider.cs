@@ -13,7 +13,7 @@ namespace Common
             {
                 if (!string.IsNullOrEmpty(_token))
                     return _token;
-                _token = Environment.GetEnvironmentVariable(GitUserTokenEnvVariableName);
+                _token = Environment.GetEnvironmentVariable(GitUserTokenEnvVariableName, EnvironmentVariableTarget.Machine);
 
                 if(string.IsNullOrEmpty(_token))
                     throw new NoTokenException($"Token not found in environment variables. " +
@@ -24,7 +24,8 @@ namespace Common
             }
 	        set
 	        {
-				_token = value; 
+	            Environment.SetEnvironmentVariable(GitUserTokenEnvVariableName, value, EnvironmentVariableTarget.Machine);
+                _token = value; 
 	        }
         }
     }
