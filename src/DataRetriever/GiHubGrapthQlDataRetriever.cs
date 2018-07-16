@@ -40,6 +40,7 @@ namespace GiHubGrapthQlDataRetriever
 		public GiHubGrapthQlDataRetriever(string user, Func<string> tokenFunc)
 		{
 			_user = user;
+		    _tokenFunc = tokenFunc;
 		}
 
 		public async Task<GraphQLResponse> RunQuery(string query, IList<KeyValuePair<string, string>> variables)
