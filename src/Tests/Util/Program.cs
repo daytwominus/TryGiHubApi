@@ -1,6 +1,5 @@
-﻿using System;
+﻿using CommandDotNet;
 using Microsoft.Extensions.Configuration;
-using Tectil.NCommand;
 using Util.Commands;
 
 namespace Util
@@ -12,10 +11,9 @@ namespace Util
 	        IConfiguration config = new ConfigurationBuilder()
 		        .AddJsonFile("appsettings.json", true, true)
 		        .Build();
-	        var endpoint = config["serviceEndpoint"];
 
-			var commands = new NCommands();
-	        commands.RunConsole(args);
-		}
+            var appRunner = new AppRunner<SearchApiCommands>();
+            appRunner.Run(args);
+        }
     }
 }
