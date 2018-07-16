@@ -65,7 +65,7 @@ namespace GiHubGrapthQlDataRetriever
 
         }
 
-        public async Task<IList<GitRepository>> GetRepositoryByCity(string city)
+        public async Task<IList<GitRepository>> GetRepositoriesByCity(string city)
         {
 	        var ret = new List<GitRepository>();
 	        var q = new SearchByCityInDescriptionQuery(city);
@@ -77,6 +77,20 @@ namespace GiHubGrapthQlDataRetriever
 			}
 
 	        return ret;
+        }
+
+        public async Task<IList<GitRepository>> GetRepositoryByUser(string user)
+        {
+            var ret = new List<GitRepository>();
+            var q = new SearchByUserQuery(user);
+            var graphQlResponse = await RunQuery(q.Query, null);
+
+            for (var i = 0; i < graphQlResponse.Data["search"]["edges"].Count; i++)
+            {
+                ret.Add(graphQlResponse.Data["search"]["edges"][i]["node"].ToObject<GitRepository>());
+            }
+
+            return ret;
         }
     }
 }

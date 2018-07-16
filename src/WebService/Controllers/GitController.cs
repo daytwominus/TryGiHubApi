@@ -21,15 +21,24 @@ namespace WebService.Controllers
         }
 
         [HttpGet("city/{city}")]
-        public List<GitRepository> Get(string city)
+        public List<GitRepository> GetByCity(string city)
         {
-            var repors = _dataRetriever.GetRepositoryByCity(city).Result.ToList();
+            var repors = _dataRetriever.GetRepositoriesByCity(city).Result.ToList();
 
             _logger.LogInformation($"Search by city {city}");
             return repors;
         }
 
-	    [HttpPost("token")]
+        [HttpGet("user/{user}")]
+        public List<GitRepository> GetByUser(string user)
+        {
+            var repors = _dataRetriever.GetRepositoryByUser(user).Result.ToList();
+
+            _logger.LogInformation($"Search by user {user}");
+            return repors;
+        }
+
+        [HttpPost("token")]
 	    public void Post([FromBody]string token)
 	    {
 	        _logger.LogInformation("updating token");

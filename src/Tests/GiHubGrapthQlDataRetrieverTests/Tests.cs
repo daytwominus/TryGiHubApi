@@ -17,7 +17,7 @@ namespace GiHubGrapthQlDataRetrieverTests
         [Test]
         public void SmokeTest()
         {
-	        var res = _dataRetriever.GetRepositoryByCity("stockholm").Result;
+	        var res = _dataRetriever.GetRepositoriesByCity("stockholm").Result;
 			Assert.NotNull(res);
 		}
     }

@@ -6,7 +6,8 @@ namespace Declarations.DomainModel
 {
     public class GitRepository
     {
-		public string Description { set; get; }
+		//public string Description { set; get; }
 		public string Name { set; get; }
+        public dynamic Stargazers { set; get; }
     }
 }
