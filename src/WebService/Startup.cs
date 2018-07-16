@@ -25,6 +25,7 @@ namespace WebService
             services.AddSingleton<IDataRetriever>(new GiHubGrapthQlDataRetriever.GiHubGrapthQlDataRetriever(
                 user: Configuration.GetSection("Git")["User"],
                 tokenFunc:() => TokenProvider.Token));
+            services.AddLogging();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -35,7 +36,7 @@ namespace WebService
                 app.UseDeveloperExceptionPage();
             }
             
-            loggerFactory.AddLog4Net("log4net.config", Configuration.GetSection("Log4net"));
+            loggerFactory.AddLog4Net();
 
             app.UseMiddleware(typeof(ErrorHandlingMiddleware));
             app.UseMvc();

@@ -12,9 +12,9 @@ namespace WebService.Middleware
     public class ErrorHandlingMiddleware
     {
         private readonly RequestDelegate next;
-        private static ILogger _logger;
+        private static ILogger<ErrorHandlingMiddleware> _logger;
 
-        public ErrorHandlingMiddleware(ILogger logger)
+        public ErrorHandlingMiddleware(ILogger<ErrorHandlingMiddleware> logger)
         {
             _logger = logger;
         }
@@ -24,8 +24,9 @@ namespace WebService.Middleware
             this.next = next;
         }
 
-        public async Task Invoke(HttpContext context /* other dependencies */)
+        public async Task Invoke(HttpContext context, ILogger<ErrorHandlingMiddleware> logger)
         {
+            _logger = logger;
             try
             {
                 await next(context);
@@ -42,7 +43,6 @@ namespace WebService.Middleware
 
             _logger.LogError(exception, exception.Message);
             
-
             var result = JsonConvert.SerializeObject(new { error = exception.Message });
             context.Response.ContentType = "application/json";
             context.Response.StatusCode = (int)code;
