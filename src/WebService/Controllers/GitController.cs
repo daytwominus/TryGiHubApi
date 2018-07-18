@@ -40,11 +40,11 @@ namespace WebService.Controllers
         }
 
         [HttpGet("users/{user}")]
-        public async Task<IActionResult> GetUserByLogin(string user, int depth)
+        public async Task<IActionResult> GetUserByLogin(string user, int depth, int amount)
         {
             if (depth < 0)
                 return BadRequest($"{nameof(depth)} must be >= 0");
-            var res = await _dataRetriever.GetUserGraphByLogin(user, depth);
+            var res = await _dataRetriever.GetUserGraphByLogin(user, depth, amount);
             if (!string.IsNullOrEmpty(res.Error))
                 return StatusCode(500, res.Error);
 

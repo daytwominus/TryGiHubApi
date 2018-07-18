@@ -100,10 +100,10 @@ namespace GiHubGrapthQlDataRetriever
             return ret;
         }
 
-        public async Task<QueryResult<GitUser>> GetUserGraphByLogin(string user, int depth)
+        public async Task<QueryResult<GitUser>> GetUserGraphByLogin(string user, int depth, int amount)
         {
             var ret = new QueryResult<GitUser>();
-            var q = new SearchUserByLoginQuery(user, depth);
+            var q = new SearchUserByLoginQuery(user, depth, amount);
             var graphQlResponse = await RunQuery(q.Query, null);
             
             if (graphQlResponse.Errors != null && graphQlResponse.Errors.Length > 0)
