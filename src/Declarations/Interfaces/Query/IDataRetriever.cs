@@ -8,6 +8,6 @@ namespace Declarations.Interfaces.Query
     {
         Task<IList<GitRepository>> GetRepositoriesByCity(string city);
         Task<IList<GitRepository>> GetRepositoryByUser(string user);
-        Task<GitUser> GetUserByName(string user, int depth);
+        Task<QueryResult<GitUser>> GetUserGraphByLogin(string user, int depth);
     }
 }

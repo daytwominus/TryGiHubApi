@@ -1,5 +1,7 @@
-﻿using Common;
+﻿using AutoMapper;
+using Common;
 using Declarations.Interfaces.Query;
+using GiHubGrapthQlDataRetriever;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -14,6 +16,7 @@ namespace WebService
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
+            InitAutoMapper();
         }
 
         public IConfiguration Configuration { get; }
@@ -38,6 +41,13 @@ namespace WebService
 
             app.UseMiddleware(typeof(ErrorHandlingMiddleware));
             app.UseMvc();
+        }
+
+        private void InitAutoMapper()
+        {
+            Mapper.Initialize(cfg => {
+                cfg.AddProfile<AutoMapperRepoProfile>();
+            });
         }
     }
 }

@@ -1,9 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
+using AutoMapper;
+using Declarations;
 using Declarations.DomainModel;
 using Declarations.Interfaces.Query;
+using GiHubGrapthQlDataRetriever.Docs;
 using GiHubGrapthQlDataRetriever.Queries;
 using GraphQL.Client;
 using GraphQL.Common.Request;
@@ -31,7 +35,7 @@ namespace GiHubGrapthQlDataRetriever
             {
                 _graphQlClient = new GraphQLClient(GitHubApiPath)
                 {
-                    DefaultRequestHeaders = { Authorization = new AuthenticationHeaderValue("Bearer", token) }
+                    DefaultRequestHeaders = {Authorization = new AuthenticationHeaderValue("Bearer", token)}
                 };
                 _graphQlClient.DefaultRequestHeaders.Add("User-Agent", _user);
             }
@@ -55,7 +59,10 @@ namespace GiHubGrapthQlDataRetriever
             {
                 _graphQlClient = new GraphQLClient(GitHubApiPath)
                 {
-                    DefaultRequestHeaders = { Authorization = new AuthenticationHeaderValue("Bearer", _tokenFunc.Invoke()) }
+                    DefaultRequestHeaders =
+                    {
+                        Authorization = new AuthenticationHeaderValue("Bearer", _tokenFunc.Invoke())
+                    }
                 };
                 _graphQlClient.DefaultRequestHeaders.Add("User-Agent", _user);
             }
@@ -93,17 +100,36 @@ namespace GiHubGrapthQlDataRetriever
             return ret;
         }
 
-        public async Task<GitUser> GetUserByName(string user, int depth)
+        public async Task<QueryResult<GitUser>> GetUserGraphByLogin(string user, int depth)
         {
-            var ret = new GitUser();
+            var ret = new QueryResult<GitUser>();
             var q = new SearchUserByLoginQuery(user, depth);
             var graphQlResponse = await RunQuery(q.Query, null);
-
-            for (var i = 0; i < graphQlResponse.Data["search"]["edges"].Count; i++)
+            
+            if (graphQlResponse.Errors.Length > 0)
             {
-                ret = graphQlResponse.Data["search"]["edges"][i].ToObject<GitUser>();
+                ret.Error = string.Join($"{Environment.NewLine}", graphQlResponse.Errors.ToList().Select(x => x.Message));
                 return ret;
             }
+
+            for (var i = 0; i < graphQlResponse.Data["search"]["edges"].Count; ++i)
+            {
+                ret.Value = BuildUser(graphQlResponse.Data["search"]["edges"][i]["node"]);
+                return ret;
+            }
+
+            return ret;
+        }
+
+        private static GitUser BuildUser(dynamic currentNode)
+        {
+            UserDoc doc = currentNode.ToObject<UserDoc>();
+            var ret = Mapper.Map(doc, new GitUser());
+
+            if (currentNode["followers"] == null)
+                return ret;
+            for (var i = 0; i < currentNode["followers"]["edges"].Count; ++i)
+                ret.Followers.Add(BuildUser(currentNode["followers"]["edges"][i]["node"]));
 
             return ret;
         }

@@ -39,40 +39,32 @@ namespace GiHubGrapthQlDataRetriever.Queries
         }
 
         private const string SubQuery = @"
-followers(first: 10) {
+            followers(first: 10) {
                   edges {
                     node {
-                      id
                       name
                       location
+                      login
                       {recursionPlaceholder}
                     }
                   }
                 }
 ";
         protected override string QueryTemplate { get; } = @"
-{
-  search (query: ""{user}"", type: USER, first: 1){
-    edges {
-      node {
-        ... on User {
-          name
-          followers (first:20){
-            edges {
-              node {
-                name
-                location
-                {recursionPlaceholder}
+            {
+              search (query: ""{user}"", type: USER, first: 1){
+                edges {
+                  node {
+                    ... on User {
+                      name
+                      location
+                      login
+                      {recursionPlaceholder}
+                    }
+                  }
+                }
               }
             }
-          }
-          login
-        }
-      }
-    }
-  }
-}
-
 ";
     }
 }

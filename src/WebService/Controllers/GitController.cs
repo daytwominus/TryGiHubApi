@@ -32,8 +32,7 @@ namespace WebService.Controllers
 
         [HttpGet("repos/{user}")]
         public async Task<IActionResult> GetReposByUser(string user)
-        {
-            
+        {   
             var data = await _dataRetriever.GetRepositoryByUser(user);
 
             _logger.LogInformation($"Search repos by user {user}");
@@ -45,7 +44,7 @@ namespace WebService.Controllers
         {
             if (depth < 0)
                 return BadRequest($"{nameof(depth)} must be >= 0");
-            var userInfo = await _dataRetriever.GetUserByName(user, depth);
+            var userInfo = await _dataRetriever.GetUserGraphByLogin(user, depth);
 
             _logger.LogInformation($"Search users by user {user}");
             return Ok(userInfo);
