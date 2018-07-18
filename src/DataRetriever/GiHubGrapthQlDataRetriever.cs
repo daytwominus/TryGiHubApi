@@ -106,7 +106,7 @@ namespace GiHubGrapthQlDataRetriever
             var q = new SearchUserByLoginQuery(user, depth);
             var graphQlResponse = await RunQuery(q.Query, null);
             
-            if (graphQlResponse.Errors.Length > 0)
+            if (graphQlResponse.Errors != null && graphQlResponse.Errors.Length > 0)
             {
                 ret.Error = string.Join($"{Environment.NewLine}", graphQlResponse.Errors.ToList().Select(x => x.Message));
                 return ret;

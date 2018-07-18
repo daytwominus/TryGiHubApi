@@ -44,10 +44,12 @@ namespace WebService.Controllers
         {
             if (depth < 0)
                 return BadRequest($"{nameof(depth)} must be >= 0");
-            var userInfo = await _dataRetriever.GetUserGraphByLogin(user, depth);
+            var res = await _dataRetriever.GetUserGraphByLogin(user, depth);
+            if (string.IsNullOrEmpty(res.Error))
+                return StatusCode(500, res.Error);
 
             _logger.LogInformation($"Search users by user {user}");
-            return Ok(userInfo);
+            return Ok(res);
         }
 
         [HttpPost("token")]
