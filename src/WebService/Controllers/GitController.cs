@@ -22,20 +22,21 @@ namespace WebService.Controllers
         }
 
         [HttpGet("repos/{city}")]
-        public List<GitRepository> GetReposByCity(string city)
+        public async Task<IActionResult> GetReposByCityAsync(string city)
         {
-            var repors = _dataRetriever.GetRepositoriesByCity(city).Result.ToList();
-
             _logger.LogInformation($"Search repos by city {city}");
-            return repors;
+            var data = await _dataRetriever.GetRepositoriesByCity(city);
+            
+            return Ok(data);
         }
 
         [HttpGet("repos/{user}")]
         public async Task<IActionResult> GetReposByUser(string user)
-        {   
+        {
+            _logger.LogInformation($"Search repos by user {user}");
             var data = await _dataRetriever.GetRepositoryByUser(user);
 
-            _logger.LogInformation($"Search repos by user {user}");
+            
             return Ok(data);
         }
 

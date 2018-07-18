@@ -19,8 +19,8 @@ namespace GiHubGrapthQlDataRetriever
     {
         private const string GitHubApiPath = "https://api.github.com/graphql";
         private GraphQLClient _graphQlClient;
-        private string _user;
-        private Func<string> _tokenFunc;
+        private readonly string _user;
+        private readonly Func<string> _tokenFunc;
 
         public GiHubGrapthQlDataRetriever(string user, string token)
         {
@@ -72,31 +72,36 @@ namespace GiHubGrapthQlDataRetriever
 
         }
 
-        public async Task<IList<GitRepository>> GetRepositoriesByCity(string city)
+        public async Task<QueryResult<IList<GitRepository>>> GetRepositoriesByCity(string city)
         {
-            var ret = new List<GitRepository>();
+            var ret = new QueryResult<IList<GitRepository>>();
+            var list = new List<GitRepository>();
             var q = new SearchReposByCityInDescriptionQuery(city);
             var graphQlResponse = await RunQuery(q.Query, null);
 
-            for (var i = 0; i < graphQlResponse.Data["search"]["edges"].Count; i++)
-            {
-                ret.Add(graphQlResponse.Data["search"]["edges"][i]["node"].ToObject<GitRepository>());
-            }
+            if (ErrorExists(graphQlResponse, ret))
+                return ret;
 
+            for (var i = 0; i < graphQlResponse.Data["search"]["edges"].Count; i++)
+                list.Add(graphQlResponse.Data["search"]["edges"][i]["node"].ToObject<GitRepository>());
+            ret.Value = list;
             return ret;
         }
 
-        public async Task<IList<GitRepository>> GetRepositoryByUser(string user)
+        public async Task<QueryResult<IList<GitRepository>>> GetRepositoryByUser(string user)
         {
-            var ret = new List<GitRepository>();
+            var ret = new QueryResult<IList<GitRepository>>();
+            var list = new List<GitRepository>();
             var q = new SearchReposByUserQuery(user);
             var graphQlResponse = await RunQuery(q.Query, null);
 
-            for (var i = 0; i < graphQlResponse.Data["search"]["edges"].Count; i++)
-            {
-                ret.Add(graphQlResponse.Data["search"]["edges"][i]["node"].ToObject<GitRepository>());
-            }
+            if (ErrorExists(graphQlResponse, ret))
+                return ret;
 
+            for (var i = 0; i < graphQlResponse.Data["search"]["edges"].Count; i++)
+                list.Add(graphQlResponse.Data["search"]["edges"][i]["node"].ToObject<GitRepository>());
+
+            ret.Value = list;
             return ret;
         }
 
@@ -105,12 +110,9 @@ namespace GiHubGrapthQlDataRetriever
             var ret = new QueryResult<GitUser>();
             var q = new SearchUserByLoginQuery(user, depth, amount);
             var graphQlResponse = await RunQuery(q.Query, null);
-            
-            if (graphQlResponse.Errors != null && graphQlResponse.Errors.Length > 0)
-            {
-                ret.Error = string.Join($"{Environment.NewLine}", graphQlResponse.Errors.ToList().Select(x => x.Message));
+
+            if (ErrorExists(graphQlResponse, ret))
                 return ret;
-            }
 
             for (var i = 0; i < graphQlResponse.Data["search"]["edges"].Count; ++i)
             {
@@ -120,6 +122,8 @@ namespace GiHubGrapthQlDataRetriever
 
             return ret;
         }
+
+        #region helpers
 
         private static GitUser BuildUser(dynamic currentNode)
         {
@@ -133,5 +137,20 @@ namespace GiHubGrapthQlDataRetriever
 
             return ret;
         }
+
+        private static bool ErrorExists<T>(GraphQLResponse graphQlResponse, QueryResult<T> ret)
+        {
+            if (graphQlResponse.Errors != null && 
+                (graphQlResponse.Errors.Length > 0 && 
+                 !graphQlResponse.Errors.ToList().All(x => x.Message == "Must have push access to view repository collaborators.")))
+            {
+                ret.Error = string.Join($"{Environment.NewLine}", graphQlResponse.Errors.ToList().Select(x => x.Message));
+                return true;
+            }
+
+            return false;
+        }
+
+        #endregion
     }
 }

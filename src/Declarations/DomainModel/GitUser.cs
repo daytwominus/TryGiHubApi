@@ -2,7 +2,7 @@
 
 namespace Declarations.DomainModel
 {
-    public class GitUser
+    public class GitUser : IDomainEntity
     {
         public string Name { set; get; }
         public string Location { set; get; }
