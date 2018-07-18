@@ -1,19 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
-using System.Linq;
 using System.Net;
 using System.Net.Http;
-using System.Runtime.Serialization;
 using System.Text;
 using Declarations.DomainModel;
-using Newtonsoft.Json.Linq;
 
 namespace Util
 {
     public class RestHelper
     {
-	    private string _address;
+	    private readonly string _address;
 	    public RestHelper(string address)
 	    {
 		    _address = address;

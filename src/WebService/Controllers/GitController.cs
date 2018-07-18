@@ -1,8 +1,5 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using Common;
-using Declarations.DomainModel;
 using Declarations.Interfaces.Query;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -12,13 +9,30 @@ namespace WebService.Controllers
     [Route("api/[controller]")]
     public class GitController : Controller
     {
+        #region private fields
+
         private readonly IDataRetriever _dataRetriever;
         private readonly ILogger<GitController> _logger;
+
+        #endregion
+
+        #region Init
 
         public GitController(IDataRetriever dataRetriever, ILogger<GitController> logger)
         {
             _logger = logger;
             _dataRetriever = dataRetriever;
+        }
+
+        #endregion
+
+        #region API
+
+        [HttpPost("token")]
+        public void Post([FromBody]string token)
+        {
+            _logger.LogInformation("updating token");
+            TokenProvider.Token = token;
         }
 
         [HttpGet("repos/{city}")]
@@ -56,11 +70,6 @@ namespace WebService.Controllers
             return Ok(res);
         }
 
-        [HttpPost("token")]
-        public void Post([FromBody]string token)
-        {
-            _logger.LogInformation("updating token");
-            TokenProvider.Token = token;
-        }
+        #endregion
     }
 }
