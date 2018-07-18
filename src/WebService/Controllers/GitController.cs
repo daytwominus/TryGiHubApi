@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using Common;
 using Declarations.DomainModel;
 using Declarations.Interfaces.Query;
@@ -30,28 +31,31 @@ namespace WebService.Controllers
         }
 
         [HttpGet("repos/{user}")]
-        public List<GitRepository> GetReposByUser(string user)
+        public async Task<IActionResult> GetReposByUser(string user)
         {
-            var repors = _dataRetriever.GetRepositoryByUser(user).Result.ToList();
+            
+            var data = await _dataRetriever.GetRepositoryByUser(user);
 
             _logger.LogInformation($"Search repos by user {user}");
-            return repors;
+            return Ok(data);
         }
 
         [HttpGet("users/{user}")]
-        public GitUser GetUserByLogin(string user)
+        public async Task<IActionResult> GetUserByLogin(string user, int depth)
         {
-            var repors = _dataRetriever.GetUserByName(user).Result;
+            if (depth < 0)
+                return BadRequest($"{nameof(depth)} must be >= 0");
+            var userInfo = await _dataRetriever.GetUserByName(user, depth);
 
             _logger.LogInformation($"Search users by user {user}");
-            return repors;
+            return Ok(userInfo);
         }
 
         [HttpPost("token")]
-	    public void Post([FromBody]string token)
-	    {
-	        _logger.LogInformation("updating token");
-	        TokenProvider.Token = token;
-	    }
-	}
+        public void Post([FromBody]string token)
+        {
+            _logger.LogInformation("updating token");
+            TokenProvider.Token = token;
+        }
+    }
 }

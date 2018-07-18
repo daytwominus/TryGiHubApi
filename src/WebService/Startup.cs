@@ -24,7 +24,7 @@ namespace WebService
             services.AddMvc();
             services.AddSingleton<IDataRetriever>(new GiHubGrapthQlDataRetriever.GiHubGrapthQlDataRetriever(
                 user: Configuration.GetSection("Git")["User"],
-                tokenFunc:() => TokenProvider.Token));
+                tokenFunc: () => TokenProvider.Token));
             services.AddLogging();
         }
 

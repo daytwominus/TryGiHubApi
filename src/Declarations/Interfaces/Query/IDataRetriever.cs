@@ -7,7 +7,7 @@ namespace Declarations.Interfaces.Query
     public interface IDataRetriever
     {
         Task<IList<GitRepository>> GetRepositoriesByCity(string city);
-        Task<IList<GitRepository>> GetRepositoryByUser(string city);
-        Task<GitUser> GetUserByName(string user);
+        Task<IList<GitRepository>> GetRepositoryByUser(string user);
+        Task<GitUser> GetUserByName(string user, int depth);
     }
 }

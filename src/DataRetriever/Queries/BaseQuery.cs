@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.Collections.Generic;
 
 namespace GiHubGrapthQlDataRetriever.Queries
 {
@@ -8,7 +6,7 @@ namespace GiHubGrapthQlDataRetriever.Queries
     {
 		protected abstract string QueryTemplate { get; }
 
-	    public string Query
+	    public virtual string Query
 	    {
 		    get
 		    {
