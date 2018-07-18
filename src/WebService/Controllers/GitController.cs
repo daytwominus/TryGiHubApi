@@ -45,7 +45,7 @@ namespace WebService.Controllers
             if (depth < 0)
                 return BadRequest($"{nameof(depth)} must be >= 0");
             var res = await _dataRetriever.GetUserGraphByLogin(user, depth);
-            if (string.IsNullOrEmpty(res.Error))
+            if (!string.IsNullOrEmpty(res.Error))
                 return StatusCode(500, res.Error);
 
             _logger.LogInformation($"Search users by user {user}");
