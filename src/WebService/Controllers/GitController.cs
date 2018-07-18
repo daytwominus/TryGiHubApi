@@ -26,17 +26,20 @@ namespace WebService.Controllers
         {
             _logger.LogInformation($"Search repos by city {city}");
             var data = await _dataRetriever.GetRepositoriesByCity(city);
-            
+            if (!string.IsNullOrEmpty(data.Error))
+                return StatusCode(500, data.Error);
+
             return Ok(data);
         }
 
-        [HttpGet("repos/{user}")]
+        [HttpGet("repos/info/{user}")]
         public async Task<IActionResult> GetReposByUser(string user)
         {
             _logger.LogInformation($"Search repos by user {user}");
             var data = await _dataRetriever.GetRepositoryByUser(user);
+            if (!string.IsNullOrEmpty(data.Error))
+                return StatusCode(500, data.Error);
 
-            
             return Ok(data);
         }
 
